@@ -1,59 +1,53 @@
-let posts = [{title:'post1'}];
-function updateLastUserActivityTime() {
-  return new Promise((resolve, reject) => {});
-}
 
-function createPost(userPost) {
-  return new Promise((resolve, rejct) => {
-setTimeout(() => {
-    posts.push(userPost)
-   
-    resolve();
-}, 1000);
-  });
-}
 
-function lastActivity() {
-  return new Promise((resolve, reject) => {
+let posts = [{ title: "this is first post" }];
+
+async function main() {
+  function updateLastUserActivityTime(newPost) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        posts.push(newPost);
+        resolve(posts);
+      }, 2000);
+    });
+  }
+  function lastActivity() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let hrs = new Date().getHours();
+        let minutes = new Date().getMinutes();
+        resolve([`${hrs}:${minutes}:${new Date().getSeconds()}`]);
+      }, 1000);
+    });
+  }
+  let deletePost = new Promise((resolve, reject) => {
     setTimeout(() => {
-
-      let createdAt = new Date().getHours();
-      let createdAt2 = new Date().getMinutes();
-      let createdAt3 = new Date().getSeconds();
-
-      resolve(
-        "Last seen at: " + createdAt + ":" + createdAt2 + ":" + createdAt3
-      );
-
-    }, 1000);
+      posts.pop();
+      resolve();
+    }, 7000);
   });
+
+  await updateLastUserActivityTime({ title2: "posts2" });
+  let time = await lastActivity();
+  console.log(posts);
+
+  console.log(time[0]);
+
+  await deletePost;
+  let time2 = await lastActivity();
+  console.log(posts);
+  console.log(time2[0]);
+
+  ///PROMISE.ALL////////////////
+  ///PROMISE.ALL////////////////
+  ///PROMISE.ALL////////////////
+
+  let [post, time4] = await Promise.all([
+    updateLastUserActivityTime({ title3: "this is 3rd post" }),
+    lastActivity(),
+  ]);
+  console.log(posts);
 }
 
-function deletePost() {
-  return new Promise((resolve, reject) => {
-    posts.pop();
-    resolve();
-  });
-}
+main();
 
-Promise.all([createPost({title:'post2'}),lastActivity()]).then(() => {
-   
-      console.log(posts);
-  
-    lastActivity()
-      .then((time) => {
-        console.log(time);
-      })
-      .then(deletePost)
-      .then(() => {
-      
-          console.log(posts);
-        
-        lastActivity().then((time) => {
-          console.log(time);
-        });
-      });
-  });
-
-/////////////////////////////////////////////////////////////
-// createPost()
